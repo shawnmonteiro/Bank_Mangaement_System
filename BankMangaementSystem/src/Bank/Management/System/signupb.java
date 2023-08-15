@@ -202,7 +202,8 @@ public class signupb extends JFrame implements ActionListener {
             Integer PAN=tx311;
 
             String tx41=tx4.getText();//shorter method
-            Integer Aadhar= Integer.parseInt(tx41);
+            Integer tx411= Integer.parseInt(tx41);
+            Integer Aadhar=tx411;
 
             String sen_cz=null;//for integer u could just have int sen_cz
             if(r1.isSelected())
@@ -266,7 +267,7 @@ public class signupb extends JFrame implements ActionListener {
                    //catch (SQLException exx) {
                    //     exx.printStackTrace();
                    // }
-
+                        new signupc(f_no);
                         f.setVisible(false);
                     }
                     catch (SQLException ex) {

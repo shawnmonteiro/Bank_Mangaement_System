@@ -4,17 +4,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;//this performs certain actions like clearing the name when the clear button is hit
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class login extends JFrame implements ActionListener {
     JLabel l1,l2,l3;
     JTextField tx1;
     JPasswordField p;
-
+    JFrame f=new JFrame();
     JButton b1,b2,b3;
     login()
     {
         super("Bank Management System");
-        JFrame f=new JFrame();
         ImageIcon i1=new ImageIcon(ClassLoader.getSystemResource("icon/bank.png"));//get the image from the given path
         Image i2= i1.getImage().getScaledInstance(100,100, Image.SCALE_DEFAULT);//scale the image
         ImageIcon i3=new ImageIcon(i2);//to put the scaled image back as an icon
@@ -58,7 +59,7 @@ public class login extends JFrame implements ActionListener {
         p.setFont(new Font("Times New Roman",Font.PLAIN,20));
         f.add(p);
 
-        b1=new JButton("SIGN IN");//button creation
+        b1=new JButton("SIGN UP");//button creation
         b1.setBounds(20,320,150,30);
         b1.setBackground(Color.BLACK);//button color
         b1.setForeground(Color.WHITE);//font color
@@ -95,7 +96,7 @@ public class login extends JFrame implements ActionListener {
         try{
             if (e.getSource()==b1)//if there is a trigger at button 1
             {
-
+                new signup();
             }
             else if (e.getSource()==b2)//if there is a trigger at button 2 for clear
             {
@@ -104,9 +105,27 @@ public class login extends JFrame implements ActionListener {
             }
             else if(e.getSource()==b3)
             {
+                String Carno=tx1.getText();
+                String pin=p.getText();
 
+                try{
+                    Conn Cont=new Conn();
+                    String qm="select * from login where Card_number='"+Carno+"' and PIN='"+pin+"'";
+                    ResultSet resultSet = Cont.statement1.executeQuery(qm);
+                    if (resultSet.next()){
+                        f.setVisible(false);
+                        new Main_Class();
+                    }else {
+                        JOptionPane.showMessageDialog(null,"Incorrect Card Number or PIN");
+                    }
+                }
+                catch (SQLException ex) {
+                    ex.printStackTrace();
+                    System.out.println("SQL State: " + ex.getSQLState());
+                    System.out.println("Error Code: " + ex.getErrorCode());
+                    System.out.println("Message: " + ex.getMessage());
+                }
             }
-
         }
         catch(Exception ex)
         {
@@ -116,7 +135,6 @@ public class login extends JFrame implements ActionListener {
     public static void main(String[] args)
     {
         new login();
-
     }
 }
 //enter + for the entire line
