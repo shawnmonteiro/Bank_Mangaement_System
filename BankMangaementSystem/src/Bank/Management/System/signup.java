@@ -206,7 +206,7 @@ public class signup extends JFrame implements ActionListener {
                 String form_no=first;//we dont use gettext as it is not an input in a text field
                 String Name=tx1.getText();
                 String F_name=tx2.getText();
-                String DOB=((JTextField) dob.getDateEditor().getUiComponent()).getText();
+                String DOB=((JTextField) dob.getDateEditor().getUiComponent()).getText();//JDateChooser
                 String gender=null;
                 if(r1.isSelected())
                 {
@@ -244,12 +244,12 @@ public class signup extends JFrame implements ActionListener {
                     else {
                         Conn con = new Conn();
                         //String q = "insert into sign_up('" + form_no + "','" + Name + "','" + F_name + "','" + DOB + "','" + gender + "','" + E_mail + "','" + Marital + "','" + City + "','" + Address + "','" + PIN_Code + "','" + State + "')";(would work in old IDEAs
-                        String q = "insert into sign_up(form_no, Reg_Name, F_name, DOB, gender, E_mail, Marital_Status, City, Address, PIN_Code, State) " +
+                        String q1= "insert into sign_up(form_no, Reg_Name, F_name, DOB, gender, E_mail, Marital_Status, City, Address, PIN_Code, State) " +
                                 "values ('" + form_no + "','" + Name + "','" + F_name + "','" + DOB + "','" + gender + "','" +
                                 E_mail + "','" + Marital + "','" + City + "','" + Address + "','" + PIN_Code + "','" + State + "')";
 
-                        con.statement.executeUpdate(q);
-                        new signupb();
+                        con.statement1.executeUpdate(q1);
+                        new signupb(form_no);
                         f.setVisible(false);
 
                         //Note:Also other way of inserting values
