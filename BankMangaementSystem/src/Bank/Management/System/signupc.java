@@ -272,6 +272,7 @@ public class signupc extends JFrame implements ActionListener {
                         c3.statement1.executeUpdate(q3);
                         c3.statement1.executeUpdate(q4);
                         JOptionPane.showMessageDialog(null,"Card number:"+cardno+"\nPIN:"+pin);
+                        new Deposit(pin);
                         f.setVisible(false);
                     }
                     catch (SQLException ex) {
