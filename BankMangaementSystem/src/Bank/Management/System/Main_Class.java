@@ -91,17 +91,20 @@ public class Main_Class extends JFrame implements ActionListener {
         }
         else if(e.getSource()==dep)
         {
-            Deposit d=new Deposit(pinno);
-            d.setVisible(true);//could be declared this way too
+            //Deposit d=new Deposit(pinno);
+            //d.setVisible(true);//could be declared this way too
+            new Deposit(pinno);
             f.setVisible(false);
         }
         else if(e.getSource()==with)
         {
             new Withdraw(pinno);
+            f.setVisible(false);
         }
         else if(e.getSource()==fast)
         {
-
+            new fastcash(pinno);
+            f.setVisible(false);
         }
         else if(e.getSource()==stat)
         {
@@ -109,11 +112,13 @@ public class Main_Class extends JFrame implements ActionListener {
         }
         else if(e.getSource()==bal)
         {
-
+            new BalanceEnq(pinno);
+            f.setVisible(false);
         }
         else if(e.getSource()==p_chan)
         {
-
+            new pinchan(pinno);
+            f.setVisible(false);
         }
 
     }

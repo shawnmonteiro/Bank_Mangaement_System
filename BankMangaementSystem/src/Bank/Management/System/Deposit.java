@@ -6,7 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.sql.ResultSet;
 import java.util.Date;
+import java.util.Random;
 
 public class Deposit extends JFrame implements ActionListener {
     String PIN;
@@ -46,7 +48,7 @@ public class Deposit extends JFrame implements ActionListener {
         b1.addActionListener(this);
         f.add(b1);
 
-        b2=new JButton("Exit");
+        b2=new JButton("Back");
         b2.setBounds(230,285,100,30);
         b2.setBackground(Color.BLACK);
         b2.setFont(new Font("Arial",Font.BOLD,20));
@@ -70,12 +72,15 @@ public class Deposit extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==b1)
         {
+
+
             if(tx1.getText().equals(""))
             {
                 JOptionPane.showMessageDialog(null,"Please enter the deposit amount:");
             }
             else{
                 try{
+
                     Date date_trans=new Date();
                     String tx2=tx1.getText();
                     Integer tx3=Integer.parseInt(tx2);
@@ -84,10 +89,39 @@ public class Deposit extends JFrame implements ActionListener {
                     String type="Deposit";
 
                     Conn c5=new Conn();
+
+                    String checkPINQuery = "SELECT * FROM ACCOUNT WHERE PIN = '" + PIN + "'";
+                    ResultSet r = c5.statement1.executeQuery(checkPINQuery);
+                    boolean ifpinexists=r.next();
+
+                    if(ifpinexists)//next means if there is any row returned. NULL cannot be used as resultset is not null &contains a query
+                    {//first check and then retrieve
+
+                        int conv_bal = r.getInt("BALANCE"); // Get the balance value from the ResultSet
+                        int bal = conv_bal + deposit_amt; // Calculate the new balance
+                        //String qa="UPDATE ACCOUNT SET Balance=" +bal+ "WHERE PIN ='"+ PIN + "'";
+                        
+                        String qa = "UPDATE ACCOUNT SET Balance = " + bal + " WHERE PIN = '" + PIN + "'";
+                        c5.statement1.executeUpdate(qa);
+                    }
+                    if(!ifpinexists)
+                    {
+                        String qpin = "INSERT INTO ACCOUNT(PIN, Balance) VALUES('" + PIN + "', '" + deposit_amt + "')";
+                        c5.statement1.executeUpdate(qpin);
+                    }
                     String q="INSERT INTO BANK_TRANS(pin,transaction_date,transaction_amount,transaction_type)"+
                             " VALUES('"+PIN+"','"+date_trans+"','"+deposit_amt+"','"+type+"')";
                     c5.statement1.executeUpdate(q);
-                    f.setVisible(false);
+
+
+                    /*else{
+                        Integer bal=0;
+                        bal=deposit_amt;
+                        String qa="UPDATE ACCOUNT SET Balance=" +bal+ "WHERE PIN ='"+ PIN+ "'";
+                        c5.statement1.executeUpdate(qa);
+                    }*/
+
+                    JOptionPane.showMessageDialog(null,"Succesfully credited Rs." +deposit_amt+"\n Thank you for choosing us");
                 }
                 catch(Exception ex)
                 {
@@ -97,7 +131,8 @@ public class Deposit extends JFrame implements ActionListener {
         }
         else if(e.getSource()==b2)
         {
-            System.exit(0);
+            new Main_Class(PIN);
+            f.setVisible(false);
         }
     }
 

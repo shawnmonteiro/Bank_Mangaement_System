@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.sql.ResultSet;
 import java.util.Date;
 
 public class Withdraw extends JFrame implements ActionListener {
@@ -46,7 +47,7 @@ public class Withdraw extends JFrame implements ActionListener {
         b1.addActionListener(this);
         f.add(b1);
 
-        b2=new JButton("Exit");
+        b2=new JButton("Back");
         b2.setBounds(230,285,100,30);
         b2.setBackground(Color.BLACK);
         b2.setFont(new Font("Arial",Font.BOLD,20));
@@ -70,24 +71,41 @@ public class Withdraw extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if(e.getSource()==b1)
         {
+            boolean flag=false;
             if(tx1.getText().equals(""))
             {
-                JOptionPane.showMessageDialog(null,"Please enter the deposit amount:");
+                JOptionPane.showMessageDialog(null,"Please enter the withdrawal amount:");
             }
             else{
                 try{
                     Date date_trans=new Date();
                     String tx2=tx1.getText();
                     Integer tx3=Integer.parseInt(tx2);
-                    Integer deposit_amt=tx3;
+                    Integer debited_amt=tx3;
+                    String type="Withdraw";
 
-                    String type="Deposit";
+                    Conn c6=new Conn();
 
-                    Conn c5=new Conn();
-                    String q="INSERT INTO BANK_TRANS(pin,transaction_date,transaction_amount,transaction_type)"+
-                            " VALUES('"+PIN+"','"+date_trans+"','"+deposit_amt+"','"+type+"')";
-                    c5.statement1.executeUpdate(q);
-                    f.setVisible(false);
+                    String s="SELECT * FROM ACCOUNT WHERE PIN= '" + PIN + "' ";
+                    ResultSet r=c6.statement1.executeQuery(s);
+                    if(r.next()) {
+                        int existing_bal=r.getInt("Balance");
+                        //test:String k="insert into account(BALANCE)"+"values('"+23+"')";
+                        if (existing_bal != 0 && existing_bal > debited_amt) {
+                            int new_bal = existing_bal - debited_amt;
+                            String w = "UPDATE ACCOUNT SET BALANCE = '" + new_bal + "' WHERE PIN = '" + PIN + "' ";
+                            flag=true;
+                            c6.statement1.executeUpdate(w);
+                            JOptionPane.showMessageDialog(null, "Succesfully debited Rs." + debited_amt + "\n Thank you for choosing us");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Insufficent funds");
+                        }
+                    }
+                    if(flag) {
+                        String q = "INSERT INTO BANK_TRANS(pin,transaction_date,transaction_amount,transaction_type)" +
+                                " VALUES('" + PIN + "','" + date_trans + "','" + debited_amt + "','" + type + "')";
+                        c6.statement1.executeUpdate(q);
+                    }
                 }
                 catch(Exception ex)
                 {
@@ -97,7 +115,8 @@ public class Withdraw extends JFrame implements ActionListener {
         }
         else if(e.getSource()==b2)
         {
-            System.exit(0);
+            new Main_Class(PIN);
+            f.setVisible(false);
         }
     }
 

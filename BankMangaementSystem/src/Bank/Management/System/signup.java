@@ -247,7 +247,7 @@ public class signup extends JFrame implements ActionListener {
                         String q1= "insert into sign_up(form_no, Reg_Name, F_name, DOB, gender, E_mail, Marital_Status, City, Address, PIN_Code, State) " +
                                 "values ('" + form_no + "','" + Name + "','" + F_name + "','" + DOB + "','" + gender + "','" +
                                 E_mail + "','" + Marital + "','" + City + "','" + Address + "','" + PIN_Code + "','" + State + "')";
-
+                        String q2="insert into account(C_Name)"+"values('"+F_name+"')";
                         con.statement1.executeUpdate(q1);
                         new signupb(form_no);
                         f.setVisible(false);
